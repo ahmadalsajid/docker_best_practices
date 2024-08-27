@@ -34,6 +34,9 @@ Lastly, start all the containers using [docker-compose.yml](./docker-compose.yml
 $ docker compose up
 ```
 
+Once all the containers are up, visit the APIs at http://localhost:8000/docs
+and Mongo Express at http://localhost:8081/.
+
 Here are some key practices that you can match up with the configurations:
 
 ### 1. Use Official Base Images
