@@ -1,4 +1,35 @@
 services:
+  app:
+    build: ./app
+    container_name: app
+    image: app
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    environment:
+      MONGODB_URL: ${MONGODB_URL}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      MONGO_DB_COLLECTION: ${MONGO_DB_COLLECTION}
+      MONGO_USER_USERNAME: ${MONGO_USER_USERNAME}
+      MONGO_USER_PASSWORD: ${MONGO_USER_PASSWORD}
+    depends_on:
+      - mongo
+    healthcheck:
+      test: curl --fail http://localhost:8000/healthcheck/ || exit 1
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
   mongo:
     image: mongo:latest
     container_name: mongo
@@ -11,8 +42,22 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    ports:
-      - 27017:27017
+#    ports:
+#      - 27017:27017
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
 
   mongo-express:
     image: mongo-express
@@ -27,6 +72,14 @@ services:
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 
 volumes:
   mongodb-data:

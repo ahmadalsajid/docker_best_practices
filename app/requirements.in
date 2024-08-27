@@ -1,0 +1,7 @@
+fastapi             ~=0.112
+motor               ~=3.5
+uvicorn             ~=0.30
+python-dotenv       ~=1.0
+pytest_cov          ~=5.0
+requests            ~=2.32
+pydantic[email]
