@@ -7,7 +7,7 @@ practices to follow while working with docker.
 ## Usage
 
 Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
-and [Trivy]https://aquasecurity.github.io/trivy/v0.54/getting-started/installation/) 
+and [Trivy](https://aquasecurity.github.io/trivy/v0.54/getting-started/installation/) 
 first.
 
 Clone this repository.
