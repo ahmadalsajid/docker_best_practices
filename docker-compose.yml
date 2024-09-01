@@ -1,11 +1,33 @@
 services:
+  nginx:
+    build: ./nginx
+    hostname: nginx
+    container_name: nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 100M
+        reservations:
+          cpus: '0.1'
+          memory: 50M
+    networks:
+      - application_network
+
   app:
     build: ./app
     container_name: app
     image: app
     hostname: app
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --workers 2 --reload --proxy-headers --forwarded-allow-ips=*,
     ports:
       - 8000:8000
+    volumes:
+      - ./app:/app
     env_file:
       - .env
     environment:
@@ -65,7 +87,7 @@ services:
       - application_network
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:latest
     container_name: mongo-express
     hostname: mongo-express
     restart: always
@@ -104,6 +126,7 @@ networks:
           ip_range: 172.28.5.0/24
           gateway: 172.28.5.1
           aux_addresses:
+            nginx: 172.28.5.123
             app: 172.28.5.3
             mongo: 172.28.5.6
             mongo-express: 172.28.5.7
