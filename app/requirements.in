@@ -4,4 +4,5 @@ uvicorn             ~=0.30
 python-dotenv       ~=1.0
 pytest_cov          ~=5.0
 requests            ~=2.32
+Faker               ~=28.1.0
 pydantic[email]

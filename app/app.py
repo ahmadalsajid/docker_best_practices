@@ -1,4 +1,4 @@
-import os
+import os, socket
 from typing import Optional, List
 from fastapi import FastAPI, Body, HTTPException, status
 from fastapi.responses import Response
@@ -103,6 +103,7 @@ async def create_student(student: StudentModel = Body(...)):
 
     A unique `id` will be created and provided in the response.
     """
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     new_student = await student_collection.insert_one(
         student.model_dump(by_alias=True, exclude=["id"])
     )
@@ -124,6 +125,7 @@ async def list_students():
 
     The response is unpaginated and limited to 1000 results.
     """
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     return StudentCollection(students=await student_collection.find().to_list(1000))
 
 
@@ -137,11 +139,11 @@ async def show_student(id: str):
     """
     Get the record for a specific student, looked up by `id`.
     """
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     if (
             student := await student_collection.find_one({"_id": ObjectId(id)})
     ) is not None:
         return student
-
     raise HTTPException(status_code=404, detail=f"Student {id} not found")
 
 
@@ -158,6 +160,7 @@ async def update_student(id: str, student: UpdateStudentModel = Body(...)):
     Only the provided fields will be updated.
     Any missing or `null` fields will be ignored.
     """
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     student = {
         k: v for k, v in student.model_dump(by_alias=True).items() if v is not None
     }
@@ -185,6 +188,7 @@ async def delete_student(id: str):
     """
     Remove a single student record from the database.
     """
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     delete_result = await student_collection.delete_one({"_id": ObjectId(id)})
 
     if delete_result.deleted_count == 1:
@@ -198,4 +202,5 @@ async def delete_student(id: str):
     response_description="Health check API"
 )
 async def health_check():
+    print(f'Response from server IP: {socket.gethostbyname(socket.gethostname())}')
     return {"Health": "OK"}

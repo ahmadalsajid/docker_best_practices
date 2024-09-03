@@ -16,4 +16,4 @@ EXPOSE 8000
 HEALTHCHECK  --start-period=30s \
   CMD curl http://localhost:8000/healthcheck/ || exit 1
 
-CMD [ "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2" ]
+CMD [ "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2", "--proxy-headers", "--forwarded-allow-ips=*"]
